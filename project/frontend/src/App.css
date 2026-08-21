@@ -11,6 +11,159 @@
   z-index: 0;
 }
 
+/* ==========================================================================
+   Fondo decorativo — campo de estrellas y estrellas fugaces.
+   Puramente estético: va detrás del lienzo 3D (que es transparente) y no
+   intercepta eventos de puntero.
+   ========================================================================== */
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 120% 80% at 70% 10%,
+      rgba(56, 189, 248, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 100% 70% at 15% 85%,
+      rgba(168, 85, 247, 0.1),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #050914 0%, #0b1220 55%, #0a0f1e 100%);
+}
+
+/* Tres capas de estrellas con densidades y parpadeos distintos, para que
+   la repetición del mosaico no se note. */
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+}
+
+.starfield::before {
+  background-image:
+    radial-gradient(1.6px 1.6px at 40px 60px, #ffffff, transparent),
+    radial-gradient(1.4px 1.4px at 180px 120px, #dbeafe, transparent),
+    radial-gradient(1.8px 1.8px at 300px 40px, #ffffff, transparent),
+    radial-gradient(1.3px 1.3px at 120px 260px, #bae6fd, transparent),
+    radial-gradient(1.5px 1.5px at 380px 300px, #ffffff, transparent),
+    radial-gradient(1.4px 1.4px at 260px 190px, #e0e7ff, transparent);
+  background-size: 420px 360px;
+  opacity: 0.85;
+  animation: star-twinkle 6.5s ease-in-out infinite;
+}
+
+.starfield::after {
+  background-image:
+    radial-gradient(1px 1px at 90px 30px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 20px 150px, rgba(191, 219, 254, 0.85), transparent),
+    radial-gradient(0.9px 0.9px at 210px 80px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 160px 220px, rgba(224, 231, 255, 0.8), transparent),
+    radial-gradient(0.8px 0.8px at 280px 160px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 60px 240px, rgba(186, 230, 253, 0.75), transparent);
+  background-size: 300px 270px;
+  opacity: 0.55;
+  animation: star-twinkle 9s ease-in-out infinite reverse;
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* --- Estrellas fugaces ---------------------------------------------------
+   Cada una cruza en diagonal y luego permanece invisible el resto del
+   ciclo, así aparecen de forma ocasional en vez de en bucle constante. */
+
+.shooting-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px 2px rgba(186, 230, 253, 0.7);
+  opacity: 0;
+  transform: rotate(28deg);
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  width: 140px;
+  height: 1.5px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(186, 230, 253, 0.35) 45%,
+    transparent
+  );
+}
+
+.shooting-star:nth-child(1) {
+  top: 8%;
+  left: -12%;
+  animation: shoot 9s linear infinite;
+}
+
+.shooting-star:nth-child(2) {
+  top: 26%;
+  left: -12%;
+  animation: shoot 13s linear infinite 4.5s;
+}
+
+.shooting-star:nth-child(3) {
+  top: 3%;
+  left: 22%;
+  animation: shoot 17s linear infinite 9s;
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    transform: rotate(28deg) translateX(0);
+  }
+  2% {
+    opacity: 1;
+  }
+  16% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+    transform: rotate(28deg) translateX(90vw);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(28deg) translateX(90vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield::before,
+  .starfield::after,
+  .shooting-star {
+    animation: none;
+  }
+  .shooting-star {
+    opacity: 0;
+  }
+}
+
 .hud-left,
 .hud-right {
   position: absolute;

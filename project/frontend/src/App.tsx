@@ -51,9 +51,16 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      {/* Fondo decorativo: campo de estrellas y estrellas fugaces (App.css) */}
+      <div className="starfield" aria-hidden="true">
+        <span className="shooting-star" />
+        <span className="shooting-star" />
+        <span className="shooting-star" />
+      </div>
       <div className="viewport">
         <Canvas
           shadows
+          gl={{ alpha: true }}
           camera={{ position: [16, 14, 18], fov: 42, near: 0.1, far: 200 }}
         >
           <World />
